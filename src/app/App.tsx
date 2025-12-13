@@ -11,13 +11,6 @@ import { useAuth } from "./contexts/AuthContext";
 import { getJourneyData, saveJourneyData } from "../lib/firestore";
 import { LogOut } from "lucide-react";
 
-interface Level {
-  day: number;
-  title: string;
-  message: string;
-  description: string;
-}
-
 interface GreetingData {
   day: number;
   emoji: string;
@@ -26,37 +19,6 @@ interface GreetingData {
   message: string;
   decorativeEmojis: string[];
 }
-
-const defaultLevels: Level[] = [
-  {
-    day: 1,
-    title: "Day 1",
-    message: "Something small, something warm.",
-    description:
-      "A quiet gesture to brighten your morning. It's not grand, but it's made with care. Let today feel a little lighter.",
-  },
-  {
-    day: 2,
-    title: "Day 2",
-    message: "For moments that need softness.",
-    description:
-      "Sometimes we all need something gentle to hold onto. This is meant to bring comfort in the ordinary hours.",
-  },
-  {
-    day: 3,
-    title: "Day 3",
-    message: "A reminder that you're thought of.",
-    description:
-      "Even in the rush of everything, there's a space for stillness. This is for those in-between moments when you pause.",
-  },
-  {
-    day: 4,
-    title: "Day 4",
-    message: "The last piece, given freely.",
-    description:
-      "Every small thing was chosen for you. Not because of what you do, but simply because you are. Thank you for being exactly who you are.",
-  },
-];
 
 const defaultGreetings: GreetingData[] = [
   {
@@ -107,7 +69,6 @@ export default function App() {
   const [greetingDay, setGreetingDay] = useState<number>(1);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [greetings, setGreetings] = useState<GreetingData[]>(defaultGreetings);
-  const [levels, setLevels] = useState<Level[]>(defaultLevels);
   const [dataLoading, setDataLoading] = useState(true);
 
   // Load data from Firestore on mount
@@ -275,7 +236,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              A Small Journey, Just for You
+              Hi monito, Зөвхөн таньд
             </motion.h1>
             <motion.p
               className="text-[var(--journey-rose)] text-sm md:text-base opacity-80"
@@ -284,7 +245,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              One day. One feeling. One small surprise.
+              Нэг өдөр. Нэг мэдрэмж.
             </motion.p>
           </motion.div>
 
@@ -299,18 +260,18 @@ export default function App() {
 
           {/* Level Cards */}
           <div className="space-y-6 mb-8">
-            {levels.map((level) => (
+            {greetings.map((greeting) => (
               <LevelCard
-                key={level.day}
-                day={level.day}
-                isUnlocked={level.day <= currentDay}
-                isCurrent={level.day === currentDay}
-                title={level.title}
-                message={level.message}
-                description={level.description}
+                key={greeting.day}
+                day={greeting.day}
+                isUnlocked={greeting.day <= currentDay}
+                isCurrent={greeting.day === currentDay}
+                title={greeting.title}
+                message={greeting.greeting}
+                description={greeting.message}
                 onClick={() => {
-                  setSelectedDay(level.day);
-                  setGreetingDay(level.day);
+                  setSelectedDay(greeting.day);
+                  setGreetingDay(greeting.day);
                   setShowGreeting(true);
                 }}
               />
