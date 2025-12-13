@@ -236,7 +236,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              Hi monito, Зөвхөн таньд
+              Hi monito, Энэ бол зөвхөн таньд
             </motion.h1>
             <motion.p
               className="text-[var(--journey-rose)] text-sm md:text-base opacity-80"
@@ -287,7 +287,7 @@ export default function App() {
               className="text-center"
             >
               <p className="text-[var(--journey-beige)] text-sm mb-2 opacity-50">
-                Next unlock in:
+                Дараагийн day хэзээ нээх вэ гэж үү?
               </p>
               <CountdownTimer nextUnlockTime={nextUnlockTime} />
             </motion.div>
