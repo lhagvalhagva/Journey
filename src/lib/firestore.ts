@@ -23,17 +23,14 @@ export async function getJourneyData(): Promise<{
     
     if (docSnap.exists()) {
       const data = docSnap.data();
-      const greetings = data.greetings;
-      const unlockedDays = data.unlockedDays;
-      
-      // Хэрэв greetings байгаа бөгөөд хоосон биш бол буцаах
-      if (greetings && Array.isArray(greetings) && greetings.length > 0) {
+      // Firestore дээр data байгаа эсэхийг шалгах
+      if (data.greetings && Array.isArray(data.greetings) && data.greetings.length > 0) {
         return {
-          greetings,
-          unlockedDays: unlockedDays || 1,
+          greetings: data.greetings,
+          unlockedDays: data.unlockedDays || 1,
         };
       }
-      // Хэрэв greetings хоосон эсвэл байхгүй бол null буцаах (default ашиглахгүй)
+      // Document байгаа боловч greetings хоосон байвал null буцаах
       return null;
     }
     return null;

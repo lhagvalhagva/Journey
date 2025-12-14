@@ -78,18 +78,17 @@ export default function App() {
         const firestoreData = await getJourneyData();
         
         if (firestoreData && firestoreData.greetings && firestoreData.greetings.length > 0) {
-          // Firestore-д data байгаа бол ашиглах
+          // Firestore дээр data байвал түүнийг ашиглах, default утга ашиглахгүй
           setGreetings(firestoreData.greetings);
           setCurrentDay(firestoreData.unlockedDays);
-          console.log("Loaded data from Firestore:", firestoreData);
         } else {
-          // Firestore хоосон байвал default утга ашиглах (зөвхөн анх удаа)
+          // Firestore хоосон байвал л default утга ашиглах
+          // Энэ нь зөвхөн анх удаа ашиглагдана, дараа нь Admin Panel-аас утга оруулна
           console.log("No data in Firestore, using defaults");
-          // Default утга аль хэдийн state-д байгаа тул өөрчлөхгүй
         }
       } catch (error) {
         console.error("Error loading data from Firestore:", error);
-        // Алдаа гарвал default утга ашиглах
+        // Error гарвал default утга ашиглах
       } finally {
         setDataLoading(false);
       }
@@ -135,7 +134,6 @@ export default function App() {
       // Update local state after successful save
       setGreetings(newGreetings);
       setCurrentDay(unlockedDays);
-      console.log("Data saved to Firestore successfully:", { newGreetings, unlockedDays });
     } catch (error) {
       console.error("Error saving to Firestore:", error);
       throw error; 

@@ -1,14 +1,15 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Нэвтэрсэн хэрэглэгч бүр read/write хийх боломжтой
+    // Users collection: нэвтэрсэн хэрэглэгч бүр read/write хийх боломжтой
     match /users/{userId} {
       allow read, write: if request.auth != null;
     }
     
-    // Journey data: нэвтэрсэн хэрэглэгч бүр read/write хийх боломжтой
+    // Journey data: бүх хэрэглэгч read хийх боломжтой, нэвтэрсэн хэрэглэгч write хийх боломжтой
     match /journeyData/{document=**} {
-      allow read, write: if request.auth != null;
+      allow read: if true; // Бүх хэрэглэгч read хийх боломжтой
+      allow write: if request.auth != null; // Зөвхөн нэвтэрсэн хэрэглэгч write хийх боломжтой
     }
   }
 }
