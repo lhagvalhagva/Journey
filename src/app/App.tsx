@@ -8,7 +8,7 @@ import { GreetingScreen } from "./components/GreetingScreen";
 import { AdminPanel } from "./components/AdminPanel";
 import { Login } from "./components/Login";
 import { useAuth } from "./contexts/AuthContext";
-import { getJourneyData, saveJourneyData } from "../lib/firestore";
+import { getJourneyData, saveJourneyData, subscribeToJourneyData } from "../lib/firestore";
 import { LogOut } from "lucide-react";
 
 interface GreetingData {
@@ -71,18 +71,20 @@ export default function App() {
   const [greetings, setGreetings] = useState<GreetingData[]>(defaultGreetings);
   const [dataLoading, setDataLoading] = useState(true);
 
-  // Load data from Firestore on mount
+  // Load data from Firestore on mount and subscribe to real-time updates
   useEffect(() => {
+    // Initial load
     const loadData = async () => {
       try {
         const firestoreData = await getJourneyData();
         
-        if (firestoreData) {
+        if (firestoreData && firestoreData.greetings && firestoreData.greetings.length > 0) {
+          // Use Firestore data if it exists and has greetings
           setGreetings(firestoreData.greetings);
           setCurrentDay(firestoreData.unlockedDays);
+          console.log("Loaded data from Firestore:", firestoreData);
         } else {
           // If Firestore is empty, use default values
-          // Admin can set values via Admin Panel
           console.log("No data in Firestore, using defaults");
         }
       } catch (error) {
@@ -93,6 +95,17 @@ export default function App() {
     };
 
     loadData();
+
+    // Subscribe to real-time updates
+    const unsubscribe = subscribeToJourneyData((data) => {
+      if (data && data.greetings && data.greetings.length > 0) {
+        setGreetings(data.greetings);
+        setCurrentDay(data.unlockedDays);
+        console.log("Real-time update from Firestore:", data);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -245,7 +258,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              Нэг өдөр. Нэг мэдрэмж.
+              Гандан ороод хийморын сан тавиулаад чиний өмнөөс тагтаа хооллосон шүү <br /> Удахгүй энэ мэт бэлэг ар араасаа цуврах болно😂
             </motion.p>
           </motion.div>
 
