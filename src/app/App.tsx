@@ -8,7 +8,7 @@ import { GreetingScreen } from "./components/GreetingScreen";
 import { AdminPanel } from "./components/AdminPanel";
 import { Login } from "./components/Login";
 import { useAuth } from "./contexts/AuthContext";
-import { getJourneyData, saveJourneyData, subscribeToJourneyData } from "../lib/firestore";
+import { getJourneyData, saveJourneyData } from "../lib/firestore";
 import { LogOut } from "lucide-react";
 
 interface GreetingData {
@@ -71,41 +71,31 @@ export default function App() {
   const [greetings, setGreetings] = useState<GreetingData[]>(defaultGreetings);
   const [dataLoading, setDataLoading] = useState(true);
 
-  // Load data from Firestore on mount and subscribe to real-time updates
+  // Load data from Firestore on mount
   useEffect(() => {
-    // Initial load
     const loadData = async () => {
       try {
         const firestoreData = await getJourneyData();
         
         if (firestoreData && firestoreData.greetings && firestoreData.greetings.length > 0) {
-          // Use Firestore data if it exists and has greetings
+          // Firestore-д data байгаа бол ашиглах
           setGreetings(firestoreData.greetings);
           setCurrentDay(firestoreData.unlockedDays);
           console.log("Loaded data from Firestore:", firestoreData);
         } else {
-          // If Firestore is empty, use default values
+          // Firestore хоосон байвал default утга ашиглах (зөвхөн анх удаа)
           console.log("No data in Firestore, using defaults");
+          // Default утга аль хэдийн state-д байгаа тул өөрчлөхгүй
         }
       } catch (error) {
         console.error("Error loading data from Firestore:", error);
+        // Алдаа гарвал default утга ашиглах
       } finally {
         setDataLoading(false);
       }
     };
 
     loadData();
-
-    // Subscribe to real-time updates
-    const unsubscribe = subscribeToJourneyData((data) => {
-      if (data && data.greetings && data.greetings.length > 0) {
-        setGreetings(data.greetings);
-        setCurrentDay(data.unlockedDays);
-        console.log("Real-time update from Firestore:", data);
-      }
-    });
-
-    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -145,6 +135,7 @@ export default function App() {
       // Update local state after successful save
       setGreetings(newGreetings);
       setCurrentDay(unlockedDays);
+      console.log("Data saved to Firestore successfully:", { newGreetings, unlockedDays });
     } catch (error) {
       console.error("Error saving to Firestore:", error);
       throw error; 
