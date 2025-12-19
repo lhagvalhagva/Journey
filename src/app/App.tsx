@@ -48,15 +48,6 @@ const defaultGreetings: GreetingData[] = [
       "Three days in, and here we are. This little gift is for all the times you've been strong, kind, and yourself. Thank you for simply being you.",
     decorativeEmojis: ["🌻", "☀️", "🍃", "🌿", "✨", "🎀", "💫", "🌸"],
   },
-  {
-    day: 4,
-    emoji: "🎉",
-    title: "Day 4",
-    greeting: "We made it to the final day!",
-    message:
-      "This is the last piece of this small journey. Every gift was chosen with care, just for you. I hope these days brought you a bit of joy. You're appreciated more than you know.",
-    decorativeEmojis: ["🎊", "✨", "🎁", "💝", "🌟", "🎈", "🫶", "😊", "💛"],
-  },
 ];
 
 export default function App() {
@@ -79,8 +70,12 @@ export default function App() {
         
         if (firestoreData && firestoreData.greetings && firestoreData.greetings.length > 0) {
           // Firestore дээр data байвал түүнийг ашиглах, default утга ашиглахгүй
-          setGreetings(firestoreData.greetings);
-          setCurrentDay(firestoreData.unlockedDays);
+          // Day 4-ийг шүүж арилгах
+          const filteredGreetings = firestoreData.greetings.filter(g => g.day !== 4);
+          setGreetings(filteredGreetings);
+          // unlockedDays нь 3-аас их байвал 3 болгох
+          const maxUnlockedDays = Math.min(firestoreData.unlockedDays, 3);
+          setCurrentDay(maxUnlockedDays);
         } else {
           // Firestore хоосон байвал л default утга ашиглах
           // Энэ нь зөвхөн анх удаа ашиглагдана, дараа нь Admin Panel-аас утга оруулна
@@ -99,7 +94,7 @@ export default function App() {
 
   useEffect(() => {
     // Calculate next unlock time (midnight of next day)
-    if (currentDay < 4) {
+    if (currentDay < 3) {
       const now = new Date();
       const tomorrow = new Date(now);
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -108,7 +103,7 @@ export default function App() {
     }
 
     // Show confetti when all levels are unlocked
-    if (currentDay === 4) {
+    if (currentDay === 3) {
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 5000);
     }
@@ -257,7 +252,7 @@ export default function App() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
           >
-            <ProgressIndicator currentDay={currentDay} totalDays={4} />
+            <ProgressIndicator currentDay={currentDay} totalDays={3} />
           </motion.div>
 
           {/* Level Cards */}
@@ -281,7 +276,7 @@ export default function App() {
           </div>
 
           {/* Countdown Timer */}
-          {currentDay < 4 && (
+          {currentDay < 3 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -296,7 +291,7 @@ export default function App() {
           )}
 
           {/* Final Message */}
-          {currentDay === 4 && (
+          {currentDay === 3 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}

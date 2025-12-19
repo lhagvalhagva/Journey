@@ -45,15 +45,6 @@ const greetingData: GreetingData[] = [
       "Three days in, and here we are. This little gift is for all the times you've been strong, kind, and yourself. Thank you for simply being you.",
     decorativeEmojis: ["🌻", "☀️", "🍃", "🌿", "✨", "🎀", "💫", "🌸"],
   },
-  {
-    day: 4,
-    emoji: "🎉",
-    title: "Day 4",
-    greeting: "We made it to the final day!",
-    message:
-      "This is the last piece of this small journey. Every gift was chosen with care, just for you. I hope these days brought you a bit of joy. You're appreciated more than you know.",
-    decorativeEmojis: ["🎊", "✨", "🎁", "💝", "🌟", "🎈", "🫶", "😊", "💛"],
-  },
 ];
 
 export function GreetingScreen({ day, onClose, greetings }: GreetingScreenProps) {

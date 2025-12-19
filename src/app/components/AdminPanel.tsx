@@ -103,7 +103,7 @@ export function AdminPanel({
                 Control which days are accessible to users. Click to unlock/lock days.
               </p>
               <div className="flex gap-3 flex-wrap">
-                {[1, 2, 3, 4].map((day) => (
+                {[1, 2, 3].map((day) => (
                   <button
                     key={day}
                     onClick={() => toggleDayUnlock(day)}
